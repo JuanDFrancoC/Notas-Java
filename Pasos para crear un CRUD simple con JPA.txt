@@ -1,0 +1,22 @@
+1-creacion de proyecto con sus dependecias:esto se peude hacer en spring inicializer.
+
+2-configurar el propertis para permitir el acceso a BD.
+
+3-creacion de entities(entidades o modelo) para asi crear mi tabla y definir los campos que llevara.
+
+4-creacion de repositorio: se debe crar una interfaz para usar jpa que va a heredar de jpaRepository que me proporsiona los metodos
+para hacer varias operacines sin necesidar de escribir sql como si se hace en otros lenguajes como php.
+ 
+5-creacion de el servicio que es donde puedo poner mi logica de negocio y los metodos curd( primero va la interfaz, que 
+es lo que se espera que debe hacer, y luego el implement que seria el que le da vida real a los metodos definidos en la interfaz)
+
+6-creaciono del controlador con las vistas, puedo ir creando vistas y creando los metodos en mi controller, tambien es importante
+tener en cuenta que si vamos a usar thymeleaf debenos tener esa dependenci, se puede agregar despues o desde la creacion del proyecto.
+
+
+Nota: si en inicializer pongo la dependecia jpa, cuanod descargo el proyecto desde un principio el buscara conecarce a bd y si
+no la encuentra generara un error.
+
+Nota: Modelo es Entidies o entidades que es donde van los geter seter y contructor.
+Nota: el servicio es recomendable usarlo para un mejor arquitectura de delegar diferentes responsabilidades, pero es importante
+saber y se puede ignorar y crear solo el ocntrolador que accede directamente al repositurio y usa los metodos que me brinda JPA.

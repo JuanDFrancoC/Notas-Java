@@ -1,0 +1,19 @@
+🧩 ¿Qué es un Repository?
+Un Repository en Spring Boot es una interfaz que te permite acceder a la base de datos sin tener que escribir código SQL. Hace parte del patrón de diseño llamado DAO (Data Access Object), que separa la lógica de acceso a datos del resto del sistema.
+
+📌 ¿Qué hace tu código?
+@Repository
+public interface ProductoRepository extends JpaRepository<Producto, Long> {}
+
+
+Este código está creando un repository para la entidad Producto, que extiende JpaRepository. Al hacer esto,
+ heredas automáticamente muchas operaciones listas para usar, como:
+
+Método heredado	Descripción
+findAll()	Obtiene todos los productos.
+findById(Long id)	Busca un producto por su ID.
+save(Producto p)	Guarda o actualiza un producto.
+deleteById(Long id)	Elimina un producto por ID.
+count()	Cuenta cuántos productos hay.
+
+Todo esto sin escribir ni una línea de SQL.

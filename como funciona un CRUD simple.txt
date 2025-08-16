@@ -1,0 +1,18 @@
+✅ Cómo funciona un CRUD en una arquitectura por capas con Spring Boot:
+El cliente (por ejemplo, una aplicación web o móvil) envía una petición HTTP (como GET, POST, PUT, DELETE) al servidor.
+
+La petición llega al controlador (@RestController), que es la capa responsable de recibir y manejar las solicitudes del cliente.
+
+El controlador llama a la capa de servicio (@Service), que contiene la lógica de negocio, es decir, lo que la aplicación debe hacer con esa solicitud.
+
+La capa de servicio se comunica con la capa de repositorio (@Repository), la cual se encarga de acceder a la base de datos (por ejemplo, usando JPA o JDBC).
+
+El repositorio consulta o modifica la base de datos según sea necesario.
+
+La base de datos devuelve la respuesta al repositorio (por ejemplo, un registro encontrado, o una confirmación de inserción).
+
+El repositorio devuelve los datos a la capa de servicio, la cual puede aplicar alguna lógica adicional si es necesario.
+
+La capa de servicio devuelve la respuesta al controlador.
+
+Finalmente, el controlador devuelve la respuesta al cliente en formato JSON (u otro formato como XML, si se configuró así).

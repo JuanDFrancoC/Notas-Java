@@ -1,0 +1,128 @@
+Estos son los paso de mi proyecto de primer app:
+
+🔹 Paso 1 – El usuario abre el formulario
+
+Archivo: login.html
+
+El usuario escribe username y password y pulsa Login.
+
+Esto envía una petición POST a /login gracias a:
+
+<form th:action="@{/login}" method="post">
+
+
+Todavía aquí no pasa por ningún controlador tuyo, porque /login está interceptado por Spring Security.
+
+🔹 Paso 2 – Intercepción de /login por Spring Security
+
+Archivo: WebSecurityConfing.java
+
+En este bean:
+
+.formLogin(form -> form
+    .loginPage("/login")
+    .permitAll())
+
+
+le dices a Spring:
+
+Usa mi plantilla login.html para mostrar el formulario.
+
+Cuando llegue un POST a /login, maneja tú la autenticación.
+
+Aquí entra en juego el Security Filter Chain: un conjunto de filtros que procesan la solicitud antes de llegar a cualquier @Controller.
+
+🔹 Paso 3 – Spring Security extrae credenciales
+
+Del POST a /login, Spring Security obtiene:
+
+username = lo_que_escribiste
+password = lo_que_escribiste
+
+
+Llama al AuthenticationManager, que en tu configuración está ajustado para usar JDBC.
+
+🔹 Paso 4 – Consulta JDBC a la BD
+
+En WebSecurityConfing.configAuthentication configuraste:
+
+builder.jdbcAuthentication()
+    .passwordEncoder(new BCryptPasswordEncoder())
+    .dataSource(dataSource)
+    .usersByUsernameQuery("select username, password, enabled from users where username=?")
+    .authoritiesByUsernameQuery("select username, role from users where username=?");
+
+
+Esto significa:
+
+Busca el usuario en la tabla users con la primera consulta.
+Ejemplo:
+
+select username, password, enabled 
+from users 
+where username = 'juan';
+
+
+Obtiene su password (hash BCrypt), su estado enabled y luego su role con la segunda consulta.
+
+🔹 Paso 5 – Verificación de contraseña con BCrypt
+
+Spring toma:
+
+Lo que escribió el usuario (rawPassword)
+
+El hash de la BD ($2a$10$zqrrflfjI3ghQ2u5qFPw7uBgbKCYUWnAxUt4YJMr9xrRH3ex60qk2)
+
+Usa:
+
+new BCryptPasswordEncoder().matches(rawPassword, passwordHashDeLaBD)
+
+
+Si coincide → autenticación exitosa.
+
+Si no coincide → redirige a /login?error.
+
+🔹 Paso 6 – Creación de la sesión
+
+Si la contraseña es correcta y enabled = true, Spring Security:
+
+Crea un Authentication con tu usuario y roles.
+
+Lo guarda en el SecurityContext.
+
+Abre una sesión HTTP para mantenerte logueado.
+
+🔹 Paso 7 – Redirección a la página solicitada
+
+Si el usuario intentaba acceder a algo protegido, lo redirige ahí después de login.
+
+Si no, lo manda a la página por defecto que hayas configurado (en tu caso no hay una explícita, así que va a la raíz / o a /personas si la pides).
+
+🔹 Paso 8 – Acceso a rutas protegidas
+
+Gracias a:
+
+.requestMatchers("/personas/nueva").hasAnyRole("ADMIN")
+.anyRequest().authenticated()
+
+
+Spring valida tus roles antes de entrar a los controladores como PersonaController.
+
+Si no tienes permiso → te manda a 403.html (configurado en WebMvcConfigurer).
+
+📌 ¿Y el SecuredPassword?
+
+Tu clase:
+
+public class SecuredPassword {
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode("password");
+        System.out.println(encodedPassword);
+    }
+}
+
+
+solo sirve para generar hashes manualmente e insertarlos en la BD cuando no tienes registro automático de usuarios.
+
+No participa en el login: es solo una herramienta de prueba.

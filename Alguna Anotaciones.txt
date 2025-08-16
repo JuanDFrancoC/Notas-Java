@@ -1,0 +1,17 @@
+Lombok :por si no lo note, ya no se crean contructor ni tampoco set ni get por que las siguientes anotaciones de Lombok nos los proporsionan.
+Son anotaciones de Lombok, una librería que ahorra escritura de código repetitivo:
+@Data: genera automáticamente getters, setters, equals, hashCode, toString, etc.
+
+@AllArgsConstructor: crea un constructor con todos los campos.
+
+@NoArgsConstructor: crea un constructor vacío.
+
+@ToString: genera el método toString() útil para imprimir el objeto.
+
+
+
+VALIDAR FORMULARIOS:
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
